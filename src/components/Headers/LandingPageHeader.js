@@ -20,12 +20,15 @@ import React from "react";
 
 // reactstrap components
 import { Button, Card, Form, Input, Container, Row, Col } from "reactstrap";
+import NotificationAlert from "react-notification-alert";
+
 
 
 // core components
 
 function LandingPageHeader() {
   let pageHeader = React.createRef();
+  const notificationAlert = React.useRef();
 
   React.useEffect(() => {
     if (window.innerWidth < 991) {
@@ -43,6 +46,8 @@ function LandingPageHeader() {
 
   return (
     <>
+      <NotificationAlert ref={notificationAlert} />
+
       <div
         style={{
           backgroundImage:
@@ -53,28 +58,33 @@ function LandingPageHeader() {
         ref={pageHeader}
       >
         <Row className="ml-auto mr-auto">
-          <div className="motto text-center" style={{width:"100%"}}>
+          <div className="motto text-center" style={{ width: "100%" }}>
             <h1>Example page</h1>
             <h3>Start designing your landing page here.</h3>
             <br />
-            <br/>
+            <br />
           </div>
+        </Row>
+        <Row className="justify-content-center">
+        <Button className="btn-round text-center" color="danger" onClick={() => {
+          let options = {
+            place: "tr",
+            message: (
+              <div>
+                <div>
+                 Something to show
+                </div>
+              </div>
+            ),
+            type: "danger",
+            icon: "nc-icon nc-bell-55",
+            autoDismiss: 10,
+          };
+          notificationAlert.current.notificationAlert(options);
+        }}>
+          Click me
+          </Button>
           </Row>
-            <Row>
-                <Card className="card-register ml-auto mr-auto">
-                  <h3 className="title mx-auto">Welcome</h3>
-
-            <Form className="register-form">
-              <label>Field1</label>
-              <Input placeholder="Field1" type="text" />
-              <label>Field2</label>
-              <Input placeholder="Field2" type="text" />
-              <Button block className="btn-round" color="danger">
-                Click me
-              </Button>
-            </Form>
-                </Card>
-            </Row>
       </div>
     </>
   );
