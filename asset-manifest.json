@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/react-single-page/static/css/main.d49aef64.chunk.css",
+    "main.js": "/react-single-page/static/js/main.a5766e21.chunk.js",
+    "main.js.map": "/react-single-page/static/js/main.a5766e21.chunk.js.map",
+    "runtime-main.js": "/react-single-page/static/js/runtime-main.8472048c.js",
+    "runtime-main.js.map": "/react-single-page/static/js/runtime-main.8472048c.js.map",
+    "static/css/2.aeaa2a60.chunk.css": "/react-single-page/static/css/2.aeaa2a60.chunk.css",
+    "static/js/2.5ada8100.chunk.js": "/react-single-page/static/js/2.5ada8100.chunk.js",
+    "static/js/2.5ada8100.chunk.js.map": "/react-single-page/static/js/2.5ada8100.chunk.js.map",
+    "index.html": "/react-single-page/index.html",
+    "static/css/2.aeaa2a60.chunk.css.map": "/react-single-page/static/css/2.aeaa2a60.chunk.css.map",
+    "static/css/main.d49aef64.chunk.css.map": "/react-single-page/static/css/main.d49aef64.chunk.css.map",
+    "static/js/2.5ada8100.chunk.js.LICENSE.txt": "/react-single-page/static/js/2.5ada8100.chunk.js.LICENSE.txt",
+    "static/js/main.a5766e21.chunk.js.LICENSE.txt": "/react-single-page/static/js/main.a5766e21.chunk.js.LICENSE.txt",
+    "static/media/daniel-olahh.jpg": "/react-single-page/static/media/daniel-olahh.77c0ffac.jpg",
+    "static/media/paper-kit.scss?v=1.3.0": "/react-single-page/static/media/nucleo-icons.ec16bc4c.woff2"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.8472048c.js",
+    "static/css/2.aeaa2a60.chunk.css",
+    "static/js/2.5ada8100.chunk.js",
+    "static/css/main.d49aef64.chunk.css",
+    "static/js/main.a5766e21.chunk.js"
+  ]
+}
