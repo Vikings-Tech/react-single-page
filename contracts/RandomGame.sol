@@ -43,7 +43,7 @@ contract RandomGame is VRFConsumerBase  {
             0x326C977E6efc84E512bB9C30f76E30c160eD06FB  // LINK Token
         ) public
     {
-        endTime = now;
+        endTime = 15 * 1 days;
         keyHash = 0x6e75b569a01ef56d18cab6a8e71e6600d6ce853834d4a5748b720d06f878b3a4;
         fee = 0.0001 * 10 ** 18; // 0.0001 LINK (varies by network)
         address msgSender = msg.sender;
@@ -102,8 +102,9 @@ contract RandomGame is VRFConsumerBase  {
     function payout() public {
         require(randomResult[msg.sender].length != 0,"No New Result available");
         uint256 length = randomResult[msg.sender].length;
-        if(randomResult[msg.sender][length-1].randomness != 7){
+        if(randomResult[msg.sender][length-1].payoutAmount == 0){
             //emit event here
+            //event - payout amount,random number,request id
             randomResult[msg.sender].pop();
             return;
         }
