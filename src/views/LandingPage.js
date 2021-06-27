@@ -17,7 +17,7 @@
 
 */
 import React from 'react'
-
+import App from '../App.js';
 // core components
 import LandingPageHeader from "components/Headers/LandingPageHeader.js";
 import DemoFooter from "components/Footers/DemoFooter.js";
