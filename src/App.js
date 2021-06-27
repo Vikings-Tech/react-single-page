@@ -24,7 +24,7 @@ function App() {
 
   return (
     <div className="App">
-      <button type="button" className="button" onClick={onButtonClickMeta}>Submit</button>
+      <button type="button" className="button" onClick={Gamble}>Submit</button>
     </div >
   );
 }

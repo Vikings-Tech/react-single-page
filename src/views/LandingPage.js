@@ -34,7 +34,7 @@ function LandingPage() {
     <>
       <LandingPageHeader />
       <DemoFooter />
-      
+      <App />
     </>
   );
 }
