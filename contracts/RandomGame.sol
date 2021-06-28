@@ -16,7 +16,8 @@ contract RandomGame is VRFConsumerBase  {
     uint256 private endTime;
     
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-    
+    event RandomnessFulfilled(address indexed player,randomData playerData,bytes32 requestId);
+    event PayoutFulfilled(address indexed player,uint256 payoutAmount);
     mapping(address=>randomData[]) randomResult;
     
     
@@ -90,7 +91,7 @@ contract RandomGame is VRFConsumerBase  {
         else{
             data.payoutAmount = 0;}
         randomResult[msg.sender].push(data);
-        //emit event for fulfilled 
+        emit RandomnessFulfilled(msg.sender,data,requestId);
         
     }
     
@@ -103,15 +104,18 @@ contract RandomGame is VRFConsumerBase  {
         require(randomResult[msg.sender].length != 0,"No New Result available");
         uint256 length = randomResult[msg.sender].length;
         if(randomResult[msg.sender][length-1].payoutAmount == 0){
-            //emit event here
-            //event - payout amount,random number,request id
+            emit PayoutFulfilled(msg.sender,randomResult[msg.sender][length-1].payoutAmount);
             randomResult[msg.sender].pop();
             return;
         }
-        payable(msg.sender).transfer(randomResult[msg.sender][length-1].payoutAmount);
-        lockedAmount -= randomResult[msg.sender][length-1].payoutAmount;
+        uint256 payoutAmount = randomResult[msg.sender][length-1].payoutAmount;
+        randomResult[msg.sender][length-1].payoutAmount = 0;
+        lockedAmount -= payoutAmount;
+        payable(msg.sender).transfer(payoutAmount);
+        
+        emit PayoutFulfilled(msg.sender,payoutAmount);
         randomResult[msg.sender].pop();
-        //emit event
+    
     }
     
     function getPendingResults() external view returns(randomData[] memory){
