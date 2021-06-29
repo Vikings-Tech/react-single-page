@@ -18,7 +18,6 @@ contract RandomGame is VRFConsumerBase  {
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
     event RandomnessFulfilled(address indexed player,randomData playerData,bytes32 requestId);
     event PayoutFulfilled(address indexed player,uint256 payoutAmount);
-    mapping(address=>randomData[]) randomResult;
     
     
     struct randomData{
@@ -27,7 +26,9 @@ contract RandomGame is VRFConsumerBase  {
         uint256 payoutAmount;
     }
     
-    uint256 lockedAmount;
+    uint256 public lockedAmount;
+    
+    mapping(bytes32=>address) reqIdToSender; 
     
 
     /**
@@ -44,7 +45,7 @@ contract RandomGame is VRFConsumerBase  {
             0x326C977E6efc84E512bB9C30f76E30c160eD06FB  // LINK Token
         ) public
     {
-        endTime = 15 * 1 days;
+        endTime = now;
         keyHash = 0x6e75b569a01ef56d18cab6a8e71e6600d6ce853834d4a5748b720d06f878b3a4;
         fee = 0.0001 * 10 ** 18; // 0.0001 LINK (varies by network)
         address msgSender = msg.sender;
@@ -69,9 +70,10 @@ contract RandomGame is VRFConsumerBase  {
         _owner = newOwner;
     }
     
-    function getRandomNumber() public returns (bytes32 requestId)  {
+    function getRandomNumber() internal returns (bytes32 requestId)  {
         require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK - fill contract with faucet");
         bytes32 reqId = requestRandomness(keyHash, fee); 
+        reqIdToSender[reqId] = msg.sender;
         return reqId;
     }
 
@@ -85,13 +87,17 @@ contract RandomGame is VRFConsumerBase  {
         data.requestId = requestId;
         //If lucky we want to lock the amount they are supposed to receive
         if(data.randomness == 7)
-        {data.payoutAmount = address(this).balance - lockedAmount;
-            lockedAmount = address(this).balance;
+        {
+            uint256 balance = address(this).balance;
+            data.payoutAmount = balance - lockedAmount;
+            lockedAmount = balance;
         }
-        else{
-            data.payoutAmount = 0;}
-        randomResult[msg.sender].push(data);
-        emit RandomnessFulfilled(msg.sender,data,requestId);
+        else
+        {
+            data.payoutAmount = 0;
+        }
+        payout(reqIdToSender[requestId],data);
+        delete reqIdToSender[requestId];
         
     }
     
@@ -100,26 +106,19 @@ contract RandomGame is VRFConsumerBase  {
         getRandomNumber();
     }
     
-    function payout() public {
-        require(randomResult[msg.sender].length != 0,"No New Result available");
-        uint256 length = randomResult[msg.sender].length;
-        if(randomResult[msg.sender][length-1].payoutAmount == 0){
-            emit PayoutFulfilled(msg.sender,randomResult[msg.sender][length-1].payoutAmount);
-            randomResult[msg.sender].pop();
-            return;
-        }
-        uint256 payoutAmount = randomResult[msg.sender][length-1].payoutAmount;
-        randomResult[msg.sender][length-1].payoutAmount = 0;
-        lockedAmount -= payoutAmount;
-        payable(msg.sender).transfer(payoutAmount);
+    function payout(address sender,randomData memory data) internal returns(randomData memory){
         
-        emit PayoutFulfilled(msg.sender,payoutAmount);
-        randomResult[msg.sender].pop();
-    
-    }
-    
-    function getPendingResults() external view returns(randomData[] memory){
-        return randomResult[msg.sender];
+        if(data.payoutAmount == 0){
+            emit PayoutFulfilled(sender,data.payoutAmount);
+            return data;
+        }
+        uint256 payoutAmount = data.payoutAmount;
+        
+        data.payoutAmount = 0;
+        lockedAmount -= payoutAmount;
+        payable(sender).transfer(payoutAmount);
+        emit PayoutFulfilled(sender,payoutAmount);
+        return data;
     }
     
 

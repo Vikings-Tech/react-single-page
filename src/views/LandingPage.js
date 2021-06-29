@@ -32,8 +32,8 @@ function LandingPage() {
   });
   return (
     <>
-      <LandingPageHeader />
-      <DemoFooter />
+      {/* <LandingPageHeader /> */}
+      {/* <DemoFooter /> */}
       <App />
     </>
   );
