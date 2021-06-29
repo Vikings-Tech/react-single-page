@@ -6,7 +6,7 @@ let web3,contract;
 function App() {
 
   const [account,setAccount] = useState()
-  const contractAddress = "0xf9C40426513965AF10B722CE65e60D214966643A";
+  const contractAddress = "0x692F69015c167f61C3DD2d5B7CdB2369a453c13b";
 
   useEffect(async()=>{
     if(!window.ethereum){
@@ -19,24 +19,27 @@ function App() {
       setAccount(window.ethereum.selectedAddress);
       console.log(web3.eth.getChainId);
       contract = new web3.eth.Contract(abi,contractAddress);
-      contract.getPastEvents("allEvents",
-    {                               
-        fromBlock: 15703788,     
-        // toBlock: END_BLOCK // You can also specify 'latest'          
-    })                              
-    .then(events => console.log(events))
-.catch((err) => console.error(err));
-    }
-    startMetamask();
-    
-  },[]);
-    if(contract != null){
+      web3.eth.getBlockNumber().then(console.log);
+    //   contract.getPastEvents("allEvents",
+    // {                               
+    //     fromBlock: 15704788,     
+    //     // toBlock: END_BLOCK // You can also specify 'latest'          
+    // })                              
+    // .then(events => console.log(events))
+    // .catch((err) => console.error(err));
+
     contract.events.PayoutFulfilled()
     .on('data', (event) => {
     console.log(event);
     })
     .on('error', console.error);
-    console.log("working")
+    console.log("working");
+    }
+    startMetamask();
+    
+  },[]);
+    if(contract != null){
+    
   }
   async function Gamble(){
     const amount = web3.utils.toWei("0.05","ether");
